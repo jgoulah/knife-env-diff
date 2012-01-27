@@ -17,9 +17,9 @@
 #
 
 module GoulahKnifePlugins
-  class EnvDiff < Chef::Knife
+  class EnvironmentDiff < Chef::Knife
 
-    banner "knife env-diff [ENVIRONMENTS...]"
+    banner "knife environment diff [ENVIRONMENTS...]"
 
     def run
       if name_args.size < 2

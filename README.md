@@ -7,7 +7,7 @@ A plugin for Chef::Knife which will diff the cookbook versions of two or more en
 Supply two or more environments to get a diff of their cookbook versions
 
 ```
-% knife env-diff development production 
+% knife environment diff development production
 
 diffing environment development against production
 

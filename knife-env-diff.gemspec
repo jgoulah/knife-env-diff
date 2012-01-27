@@ -4,7 +4,7 @@ require "knife-env-diff/version"
 
 Gem::Specification.new do |s|
   s.name          = 'knife-env-diff'
-  s.version       = Knife::EnvDiff::VERSION
+  s.version       = Knife::EnvironmentDiff::VERSION
   s.date          = '2012-01-02'
   s.summary       = "A plugin for Chef::Knife which displays the roles that are included recursively within a role and optionally displays all the roles that include it."
   s.description   = s.summary
