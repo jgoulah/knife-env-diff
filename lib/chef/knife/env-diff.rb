@@ -32,24 +32,24 @@ module GoulahKnifePlugins
       otherenvs = name_args.slice(1, name_args.length - 1)
 
       from_env   = {}
-      env = load_environment(firstenv)
-      from_env[firstenv] = env.cookbook_versions
+      from_env[firstenv] = get_env_cookbooks(firstenv)
 
       to_env   = {}
       otherenvs.each do |env_name|
-        env = load_environment(env_name)
-        to_env[env_name] = env.cookbook_versions
+        to_env[env_name] = get_env_cookbooks(env_name)
       end
 
       ui.msg "diffing environment " + firstenv + " against " + otherenvs.join(', ') + "\n\n"
 
       from_env.each_value do |from_cookbooks|
-        from_cookbooks.each do |from_cookbook, from_version|
+        from_cookbooks.each do |from_cookbook, from_data|
+          from_version = from_data["versions"].first['version']
 
           diff_versions = {}
 
           to_env.each do |to_env, to_cookbooks|
-            to_version = to_cookbooks[from_cookbook] || "missing"
+            to_version = to_cookbooks[from_cookbook]["versions"].first['version']
+
             if from_version != to_version
               diff_versions[to_env] = to_version
             end
@@ -69,17 +69,8 @@ module GoulahKnifePlugins
 
     end
 
-    def load_environment(env)
-      e = Chef::Environment.load(env)
-      return e
-      rescue Net::HTTPServerException => e
-        if e.response.code.to_s == "404"
-          ui.error "The environment #{env} does not exist on the server, aborting."
-          Chef::Log.debug(e)
-          exit 1
-        else
-          raise
-        end
+   def get_env_cookbooks(env)
+      rest.get_rest("environments/#{env}/cookbooks")
    end
 
   end
