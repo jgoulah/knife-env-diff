@@ -43,21 +43,23 @@ module GoulahKnifePlugins
 
       from_env.each_value do |from_cookbooks|
         from_cookbooks.each do |from_cookbook, from_data|
-          from_version = from_data["versions"].first['version']
-
           diff_versions = {}
+
+          unless from_data['versions'].empty?
+            from_version = from_data["versions"].first['version'] 
+          end
 
           to_env.each do |to_env, to_cookbooks|
             to_version = to_cookbooks[from_cookbook]["versions"].first['version']
 
-            if from_version != to_version
+            if from_version != to_version || from_version.nil?
               diff_versions[to_env] = to_version
             end
           end
 
           unless diff_versions.empty?
             ui.msg "cookbook: "+ from_cookbook
-            ui.msg " #{firstenv} version: "+ from_version
+            ui.msg " #{firstenv} version: "+ (from_version || 'none')
             diff_versions.each do |env, version|
               ui.msg " #{env} version: "+ version
             end
