@@ -57,7 +57,7 @@ module GoulahKnifePlugins
 
           unless diff_versions.empty?
             ui.msg "cookbook: "+ from_cookbook
-            ui.msg " #{firstenv} version: "+ (from_version || 'none')
+            ui.msg " #{firstenv} version: #{from_version}"
             diff_versions.each do |env, version|
               ui.msg " #{env} version: "+ version
             end
