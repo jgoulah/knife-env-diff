@@ -43,35 +43,40 @@ module GoulahKnifePlugins
 
       from_env.each_value do |from_cookbooks|
         from_cookbooks.each do |from_cookbook, from_data|
-          from_version = from_data["versions"].first['version']
-
           diff_versions = {}
 
-          to_env.each do |to_env, to_cookbooks|
-            to_version = to_cookbooks[from_cookbook]["versions"].first['version']
+          from_version = get_cookbook_version(from_data)
 
-            if from_version != to_version
+          to_env.each do |to_env, to_cookbooks|
+            to_version = get_cookbook_version(to_cookbooks[from_cookbook])
+
+            if from_version != to_version || from_version.nil?
               diff_versions[to_env] = to_version
             end
           end
 
           unless diff_versions.empty?
             ui.msg "cookbook: "+ from_cookbook
-            ui.msg " #{firstenv} version: "+ from_version
+            ui.msg " #{firstenv} version: #{from_version}"
             diff_versions.each do |env, version|
               ui.msg " #{env} version: "+ version
             end
             ui.msg "\n"
           end
-
         end
       end
-
     end
 
-   def get_env_cookbooks(env)
+    def get_env_cookbooks(env)
       rest.get_rest("environments/#{env}/cookbooks")
-   end
+    end
 
+    def get_cookbook_version(data)
+      if data['versions'].empty?
+        'none'
+      else
+        data['versions'].first['version']
+      end
+    end
   end
 end
