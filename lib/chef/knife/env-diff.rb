@@ -47,11 +47,11 @@ module GoulahKnifePlugins
 
           from_version = get_cookbook_version(from_data)
 
-          to_env.each do |to_env, to_cookbooks|
+          to_env.each do |env, to_cookbooks|
             to_version = get_cookbook_version(to_cookbooks[from_cookbook])
 
             if from_version != to_version || from_version.nil?
-              diff_versions[to_env] = to_version
+              diff_versions[env] = to_version
             end
           end
 
